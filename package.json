@@ -1,0 +1,27 @@
+{
+  "name": "mangalibrary-nuxtui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=80 nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.1",
+    "core-js": "^3.9.1",
+    "cross-env": "^7.0.3",
+    "io": "^1.0.3",
+    "js-sha256": "^0.9.0",
+    "nuxt": "^2.15.3",
+    "socket.io": "^4.0.1",
+    "vue-native-websocket": "^2.0.14",
+    "vue-pdf": "^4.2.0",
+    "vue-sessionstorage": "^1.0.0",
+    "vue-socket.io": "^3.0.10"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.3"
+  }
+}
