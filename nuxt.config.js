@@ -52,7 +52,7 @@ export default {
   axios: {
     // extra config e.g
     // BaseURL: 'https://link-to-API'
-    baseURL: 'http://192.168.1.124:8080'
+    baseURL: process.env.BASE_URL || 'http://192.168.1.124:8080'
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

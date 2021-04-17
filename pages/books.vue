@@ -1,6 +1,7 @@
 <template>
 
   <v-container>
+
     <v-card v-for="n in notifications" :key="n.id">
       <v-alert
         dense
@@ -21,45 +22,92 @@
       <button @click="refresh" style="alignment: right"><v-icon medium color="primary">mdi-refresh</v-icon></button>
     </v-row>
     <v-row>
+      <grid-view  :items="getBooksForSite(searchSites)" >
+        <label>TEST LAVEL</label>
+      </grid-view>
+<!--    <v-col>-->
+<!--      <v-card>-->
+<!--        <v-container fluid>-->
+<!--          <v-row>-->
+<!--            <v-col-->
+<!--              v-for="book in getBooksForSite(searchSites)"-->
+<!--              :key="book.id"-->
+<!--              class="child-flex"-->
+<!--              :cols="(book.name===selectedBook.name) ? 12 : 4"-->
+<!--              :sm="(book.name===selectedBook.name) ? 12 : 6"-->
+<!--              :md="(book.name===selectedBook.name) ? 8 : 4"-->
+<!--              :lg="(book.name===selectedBook.name) ? 6 : 3"-->
+<!--            >-->
+<!--              <v-col :cols="(book.name===selectedBook.name) ? 4 : 12" style="justify-content: center">-->
+<!--                <v-card flat tile class="d-flex">-->
+<!--                  <v-img :src="getCover(book)" :alt=book.name @click="selectBook(book)">-->
+<!--                    <template v-slot:placeholder>-->
+<!--                      <v-row-->
+<!--                        class="fill-height ma-0"-->
+<!--                        align="center"-->
+<!--                        justify="center"-->
+<!--                      >-->
+<!--                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>-->
+<!--                      </v-row>-->
+<!--                    </template>-->
+<!--                  </v-img>-->
+<!--                </v-card>-->
+<!--              </v-col>-->
+<!--                <v-col :cols="12">-->
+<!--                  <v-card v-show="(book.name===selectedBook.name)">-->
+<!--                    <v-card-title style="font-size: 18px">-->
+<!--                      {{book.name}}-->
+<!--                    </v-card-title>-->
+<!--                    <v-card-text style="font-size: 12px">-->
+<!--                      {{book.description}}-->
+<!--                    </v-card-text>-->
+<!--                    <v-card-actions>-->
 
-    <v-col>
-      <v-card>
-        <v-container fluid>
-          <v-row>
-            <v-col
-              v-for="book in getBooksForSite(searchSites)"
-              :key="book.id"
-              class="child-flex"
-              cols="3"
-              sm="4" md="4" lg="4"
-            >
-              <v-card flat tile class="d-flex">
-
-                <v-img :src="getCover(book)" :alt=book.name @click="selectBook(book)">
-                  <template v-slot:placeholder>
-                    <v-row
-                      class="fill-height ma-0"
-                      align="center"
-                      justify="center"
-                    >
-                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                    </v-row>
-                  </template>
-                </v-img>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
+<!--                    </v-card-actions>-->
+<!--                  </v-card>-->
+<!--                </v-col>-->
+<!--              <v-container fluid>-->
+<!--                <v-row>-->
+<!--              <v-expand-transition>-->
+<!--                <v-col :cols="12">-->
+<!--                <v-card v-show="(book.name===selectedBook.name && book.chaper !== '')">-->
+<!--                  <v-card-title>-->
+<!--                  </v-card-title>-->
+<!--                  <v-card-text>-->
+<!--                                  <v-data-table-->
+<!--                                    :items="subBooks"-->
+<!--                                    :items-per-page="10"-->
+<!--                                    :headers="subTableHeaders"-->
+<!--                                    dense-->
+<!--                                    dark-->
+<!--                                    style="font-size: 12px">-->
+<!--                                    <template v-slot:item.actions="data">-->
+<!--                                      <v-btn class="mx-2" fab dark small color="primary" @click="selectBookPDF(data.item);">-->
+<!--                                        <v-icon dark>mdi-eye</v-icon>-->
+<!--                                      </v-btn>-->
+<!--                                      <v-btn class="mx-2" fab dark small color="primary" @click="downloadPDF(data.item)">-->
+<!--                                        <v-icon dark>mdi-download</v-icon>-->
+<!--                                      </v-btn>-->
+<!--                                    </template>-->
+<!--                                  </v-data-table>-->
+<!--                  </v-card-text>-->
+<!--                  <v-card-actions>-->
+<!--                  </v-card-actions>-->
+<!--                </v-card>-->
+<!--                </v-col>-->
+<!--              </v-expand-transition>-->
+<!--                </v-row>-->
+<!--              </v-container>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
+<!--        </v-container>-->
+<!--      </v-card>-->
+<!--    </v-col>-->
     </v-row>
-
-
       <v-dialog
         transition="dialog-top-transition"
         max-height="30%"
         v-model="showDialog"
-
         >
         <template v-slot:default="showDialog" >
           <v-btn
@@ -111,76 +159,19 @@
           </v-card>
         </template>
       </v-dialog>
-    <v-bottom-sheet hide-overlay v-model="showExpand" max-width="85%" :scrollable=true>
-
-      <v-card class="justify-center" style="margin-left: auto;" >
-        <v-btn
-          class="justify-right"
-          absolute
-          fab
-          @click="showExpand = false"
-          style="transform: translate(550%, -550%);"
-        >
-          <v-icon medium color="cyan">mdi-close</v-icon>
-        </v-btn>
-            <v-card-title color="primary"><v-col>{{selectedBook.name}}</v-col>
-            </v-card-title>
-            <v-card-text>
-            <v-row style="font-size: 10px;margin-left: auto" class="justify-center">
-              <v-col>
-                Views:{{selectedBook.views}}
-              </v-col>
-              <v-col>
-                Downloads:{{selectedBook.downloads}}
-              </v-col>
-            </v-row>
-             <p>{{selectedBook.description}}</p>
-            <v-row v-if="doesHaveVolumes(selectedBook)">
-              <v-data-table
-                :items="subBooks"
-                :items-per-page="10"
-                :headers="subTableHeaders"
-                dense
-                dark
-                style="margin-left: 20px">
-                <template v-slot:item.actions="data">
-                  <v-btn class="mx-2" fab dark small color="primary" @click="selectBookPDF(data.item);">
-                    <v-icon dark>mdi-eye</v-icon>
-                  </v-btn>
-                  <v-btn class="mx-2" fab dark small color="primary" @click="downloadPDF(data.item)">
-                    <v-icon dark>mdi-download</v-icon>
-                  </v-btn>
-                </template>
-              </v-data-table>
-            </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-row style="font-size: 10px;margin-left: auto">
-                <v-col v-if="doesHaveVolumes(selectedBook)">
-                  <v-btn><v-icon>mdi-return</v-icon></v-btn>
-                </v-col>
-                <v-col >
-                  <v-btn @click="selectBookPDF(selectedBook)"><v-icon>mdi-eye</v-icon></v-btn>
-                </v-col>
-                <v-col>
-                  <v-btn @click="downloadPDF(selectedBook)"><v-icon>mdi-download</v-icon></v-btn>
-                </v-col>
-              </v-row>
-            </v-card-actions>
-
-            <!--                  <pdf class="justify-center" v-if="show" ref="pdf" style="border: 1px solid black;alignment: center" :src="currentPDF" :page="page" :rotate="rotate" @progress="loadedRatio = $event" @error="error" @num-pages="numPages = $event"></pdf>-->
-      </v-card>
-    </v-bottom-sheet>
   </v-container>
 </template>
 
 <script>
 import pdf from 'vue-pdf'
+import GridView from "../components/grid_view";
 
 export default {
   name: "books",
   components: {
-    pdf
+    pdf,
+  'grid-view' : GridView
+
   },
   computed:{
     currentUser(){
@@ -207,7 +198,7 @@ export default {
         }, this.notifications[0].time * 1000);
 
       }
-    }
+    },
   },
   data(){
     return {
@@ -242,6 +233,7 @@ export default {
     this.sendMessage()
     this.getSites()
     console.log(this.$vuetify.breakpoint)
+
   },
   methods:{
     getNextPage(){
@@ -398,7 +390,7 @@ export default {
       if (this.selectedBook === book){
         this.showExpand = !this.showExpand
         this.page = 1
-        this.selectedBook = book
+        this.selectedBook = {chapter:''}
         return
       }
       if (this.doesHaveVolumes(book)){
@@ -475,16 +467,6 @@ export default {
           this.newNotification("failed getting distinct books",'error')
         }
       )
-    },
-    getCover(book){
-      var url = "http://192.168.1.124:8080/v2/books/cover?api_key="+this.currentUser.api_key+"&book="+book.name+"&image="+book.cover_img
-      if (book.chapter !== ""){
-        url += "&chapter="+book.chapter
-      }
-      if (book.volume !== ""){
-        url += "&volume="+book.volume
-      }
-      return encodeURI(url)
     },
     sendMessage(){
     console.log(this.api_key)
